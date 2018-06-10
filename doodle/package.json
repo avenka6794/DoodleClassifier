@@ -7,5 +7,9 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "latest",
+    "now": "^11.2.2"
+  }
 }
