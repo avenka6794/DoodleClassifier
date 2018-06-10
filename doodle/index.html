@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body >
+
+  <canvas id="cnv" width="28" height="28" style="border: 2px solid;">
+    </canvas>
+
+<input type="button" value="draw" onclick="use_tool('draw');" />
+<input type="button" value="erase" onclick="use_tool('erase');" />
+  <input type="button" value="clear" id="clear"/>
+
+  <button id="test">TEST</button>
+  <button id="train">TRAIN</button>
+
+  <script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+  <script src="https://rawgit.com/CodingTrain/Toy-Neural-Network-JS/master/lib/matrix.js"></script>
+  <script src="https://rawgit.com/CodingTrain/Toy-Neural-Network-JS/master/lib/nn.js"></script>
+  <script src="index.js">
+  </script>
+
+  <script>
+    //Canvas
+var canvas = document.getElementById('cnv');
+var ctx = canvas.getContext('2d');
+//Variables
+var canvasx = $(canvas).offset().left;
+var canvasy = $(canvas).offset().top;
+var last_mousex = last_mousey = 0;
+var mousex = mousey = 0;
+var mousedown = false;
+var tooltype = 'draw';
+
+//Mousedown
+$(canvas).on('mousedown', function(e) {
+    last_mousex = mousex = parseInt(e.clientX-canvasx);
+	last_mousey = mousey = parseInt(e.clientY-canvasy);
+    mousedown = true;
+});
+
+//Mouseup
+$(canvas).on('mouseup', function(e) {
+    mousedown = false;
+});
+
+//Mousemove
+$(canvas).on('mousemove', function(e) {
+    mousex = parseInt(e.clientX-canvasx);
+    mousey = parseInt(e.clientY-canvasy);
+    if(mousedown) {
+        ctx.beginPath();
+        if(tooltype=='draw') {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth =2;
+        } else {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineWidth = 10;
+        }
+        ctx.moveTo(last_mousex,last_mousey);
+        ctx.lineTo(mousex,mousey);
+        ctx.lineJoin = ctx.lineCap = 'round';
+        ctx.stroke();
+    }
+    last_mousex = mousex;
+    last_mousey = mousey;
+    //Output
+  
+});
+
+//Use draw|erase
+use_tool = function(tool) {
+    tooltype = tool; //update
+}
+
+$('#clear').click(function(){
+  ctx.clearRect(0,0, canvas.width, canvas.height)
+})
+  </script>
+
+  <style>
+    button {
+      font-size: 24pt;
+      margin: 10px;
+    }
+    input{
+      font-size: 24pt;
+    }
+  </style>
+</body>
+
+</html>
